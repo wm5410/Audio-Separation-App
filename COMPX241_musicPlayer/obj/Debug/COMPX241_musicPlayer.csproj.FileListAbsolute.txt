@@ -1,0 +1,11 @@
+C:\Users\darth\source\repos\COMPX241_musicPlayer\COMPX241_musicPlayer\bin\Debug\COMPX241_musicPlayer.exe.config
+C:\Users\darth\source\repos\COMPX241_musicPlayer\COMPX241_musicPlayer\bin\Debug\COMPX241_musicPlayer.exe
+C:\Users\darth\source\repos\COMPX241_musicPlayer\COMPX241_musicPlayer\bin\Debug\COMPX241_musicPlayer.pdb
+C:\Users\darth\source\repos\COMPX241_musicPlayer\COMPX241_musicPlayer\obj\Debug\COMPX241_musicPlayer.csproj.AssemblyReference.cache
+C:\Users\darth\source\repos\COMPX241_musicPlayer\COMPX241_musicPlayer\obj\Debug\COMPX241_musicPlayer.csproj.SuggestedBindingRedirects.cache
+C:\Users\darth\source\repos\COMPX241_musicPlayer\COMPX241_musicPlayer\obj\Debug\COMPX241_musicPlayer.musicPlayer.resources
+C:\Users\darth\source\repos\COMPX241_musicPlayer\COMPX241_musicPlayer\obj\Debug\COMPX241_musicPlayer.Properties.Resources.resources
+C:\Users\darth\source\repos\COMPX241_musicPlayer\COMPX241_musicPlayer\obj\Debug\COMPX241_musicPlayer.csproj.GenerateResource.cache
+C:\Users\darth\source\repos\COMPX241_musicPlayer\COMPX241_musicPlayer\obj\Debug\COMPX241_musicPlayer.csproj.CoreCompileInputs.cache
+C:\Users\darth\source\repos\COMPX241_musicPlayer\COMPX241_musicPlayer\obj\Debug\COMPX241_musicPlayer.exe
+C:\Users\darth\source\repos\COMPX241_musicPlayer\COMPX241_musicPlayer\obj\Debug\COMPX241_musicPlayer.pdb
