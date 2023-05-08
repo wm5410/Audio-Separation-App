@@ -1,4 +1,5 @@
 ﻿using System;
+using NAudio;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -12,6 +13,11 @@ namespace COMPX241_musicPlayer
 {
     public partial class musicPlayer : Form
     {
+        //NAudio test
+        private NAudio.Wave.WaveFileReader wave = null;
+        private NAudio.Wave.DirectSoundOut output = null;
+
+
         public musicPlayer()
         {
             InitializeComponent();
@@ -32,11 +38,18 @@ namespace COMPX241_musicPlayer
         private void buttonPause_Click(object sender, EventArgs e)
         {
             Player.Ctlcontrols.pause();
+            output.Stop();
+            buttonPause.Enabled = false;
+            buttonPlay.Enabled = true;
         }
 
         private void buttonPlay_Click(object sender, EventArgs e)
         {
             Player.Ctlcontrols.play();
+            output.Play();
+            buttonPlay.Enabled = false;
+            buttonPause.Enabled = true;
+
         }
 
         private void buttonNext_Click(object sender, EventArgs e)
@@ -69,15 +82,43 @@ namespace COMPX241_musicPlayer
 
         }
 
+        private void menuStripUpload_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+
+        }
+
+        private void openWAVToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        //NAudio test
+        private void testToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog open = new OpenFileDialog();
+            open.Filter = "Wave FIle (*.wav)|*.wav;";
+            open.Multiselect = true;
+            if (open.ShowDialog() == DialogResult.OK) //return;
+            {
+                wave = new NAudio.Wave.WaveFileReader(open.FileName);
+                output = new NAudio.Wave.DirectSoundOut();
+                output.Init(new NAudio.Wave.WaveChannel32(wave));
+                //output.Play();
+                buttonPause.Enabled = false;
+            }
+
+            
+        }
+
         private void buttonOpen_Click(object sender, EventArgs e)
         {
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.Multiselect = true;
-            if(ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            if (ofd.ShowDialog() == DialogResult.OK) return;
             {
                 files = ofd.FileNames;
                 paths = ofd.FileNames;
-                for(int i = 0; i < paths.Length; i++)
+                for (int i = 0; i < paths.Length; i++)
                 {
                     track_List.Items.Add(paths[i]);
                 }
