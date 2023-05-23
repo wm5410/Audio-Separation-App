@@ -13,6 +13,8 @@ using System.Windows.Forms.VisualStyles;
 using NAudio.CoreAudioApi;
 using AxWMPLib;
 using NAudio.Gui;
+using System.Diagnostics;
+
 
 namespace COMPX241_musicPlayer
 {
@@ -24,7 +26,7 @@ namespace COMPX241_musicPlayer
         //MP3
         private NAudio.Wave.BlockAlignReductionStream stream = null;
 
-
+        
 
         public musicPlayer()
         {
@@ -107,7 +109,9 @@ namespace COMPX241_musicPlayer
             MMDevice defaultDevice = devEnum.GetDefaultAudioEndpoint(DataFlow.Render, Role.Multimedia);
             //Console.WriteLine("Sending Volume level through " + port.PortName);
             //Console.WriteLine("\rCurrent Level: " + defaultDevice.AudioMeterInformation.MasterPeakValue.ToString());
-            Console.WriteLine("\rCurrent Level: " + defaultDevice.AudioMeterInformation.PeakValues[0]);
+            
+            
+            //Console.WriteLine("\rCurrent Level: " + defaultDevice.AudioMeterInformation.PeakValues[0]);
             progressBar1.Value = (int)defaultDevice.AudioMeterInformation.PeakValues[0];
             //Test levels of audio
             textBox1.Text = (defaultDevice.AudioMeterInformation.PeakValues[0] * 100).ToString();
@@ -204,6 +208,51 @@ namespace COMPX241_musicPlayer
         {
 
             
+        }
+
+        private void musicPlayer_Load(object sender, EventArgs e)
+        {
+   
+
+        }
+
+        private void cMDTestToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            //Start process to write to cmd
+            Process process = new Process();
+            //Code to write to cmd prompt
+            process.StartInfo.FileName = "cmd.exe";
+            process.StartInfo.CreateNoWindow = true;
+            process.StartInfo.RedirectStandardOutput = true;
+            process.StartInfo.RedirectStandardInput = true;
+            process.StartInfo.UseShellExecute = false;
+            process.StartInfo.WorkingDirectory = "C:\\Users\\willi\\anaconda3\\Scripts";
+
+            process.Start();
+
+            using (var sw = process.StandardInput)
+            {
+                if (sw.BaseStream.CanWrite)
+                {
+                    //Activate anaconda 
+                    sw.WriteLine("C:\\Users\\willi\\anaconda3\\Scripts\\activate.bat");
+                    //Activate environment
+                    sw.WriteLine("activate base");
+
+                    sw.WriteLine("cd/");
+                    sw.WriteLine("cd Users");
+                    sw.WriteLine("cd willi");
+                    sw.WriteLine("cd Music");
+                    //Code to execute
+                    sw.WriteLine("demucs test.mp3");
+                }
+            }
+
+            while (!process.StandardOutput.EndOfStream)
+            {
+                var line = process.StandardOutput.ReadLine();
+                Console.WriteLine(line);
+            }
         }
 
         private void buttonOpen_Click(object sender, EventArgs e)

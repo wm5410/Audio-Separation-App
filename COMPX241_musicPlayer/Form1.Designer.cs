@@ -56,6 +56,7 @@
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
+            this.cMDTestToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStripUpload.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pic_art)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -141,7 +142,8 @@
             // testToolStripMenuItem
             // 
             this.testToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.testToolStripMenuItem1});
+            this.testToolStripMenuItem1,
+            this.cMDTestToolStripMenuItem});
             this.testToolStripMenuItem.Name = "testToolStripMenuItem";
             this.testToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
             this.testToolStripMenuItem.Text = "Test";
@@ -149,7 +151,7 @@
             // testToolStripMenuItem1
             // 
             this.testToolStripMenuItem1.Name = "testToolStripMenuItem1";
-            this.testToolStripMenuItem1.Size = new System.Drawing.Size(94, 22);
+            this.testToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
             this.testToolStripMenuItem1.Text = "Test";
             this.testToolStripMenuItem1.Click += new System.EventHandler(this.testToolStripMenuItem1_Click);
             // 
@@ -307,6 +309,13 @@
             this.pictureBox2.TabIndex = 23;
             this.pictureBox2.TabStop = false;
             // 
+            // cMDTestToolStripMenuItem
+            // 
+            this.cMDTestToolStripMenuItem.Name = "cMDTestToolStripMenuItem";
+            this.cMDTestToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.cMDTestToolStripMenuItem.Text = "CMDTest";
+            this.cMDTestToolStripMenuItem.Click += new System.EventHandler(this.cMDTestToolStripMenuItem_Click);
+            // 
             // musicPlayer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -338,6 +347,7 @@
             this.MainMenuStrip = this.menuStripUpload;
             this.Name = "musicPlayer";
             this.Text = "musicPlayer";
+            this.Load += new System.EventHandler(this.musicPlayer_Load);
             this.menuStripUpload.ResumeLayout(false);
             this.menuStripUpload.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pic_art)).EndInit();
@@ -381,6 +391,7 @@
         private System.Windows.Forms.ComboBox comboBox1;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.PictureBox pictureBox2;
+        private System.Windows.Forms.ToolStripMenuItem cMDTestToolStripMenuItem;
     }
 }
 
