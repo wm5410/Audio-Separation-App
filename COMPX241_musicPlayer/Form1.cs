@@ -255,6 +255,43 @@ namespace COMPX241_musicPlayer
             }
         }
 
+       private List<string> selectedWavFiles = new List<string>();
+
+        private void checkedListBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string filePath = paths[e.Index];
+
+            if (e.CurrentValue == CheckState.Unchecked)
+            {
+                selectedWavFiles.Add(filePath);
+            }
+            else if (e.CurrentValue == CheckState.Checked)
+            {
+                selectedWavFiles.Remove(filePath);
+            }
+            DisposeWave();
+
+            if (selectedWavFiles.Count > 0)
+            {
+                var mixer = new WaveMixerStream32();
+
+                foreach (var file in selectedWavFiles)
+                {
+                    var reader = new WaveFileReader(file);
+                    mixer.AddInputStream(new WaveChannel32(reader));
+                }
+                output = new DirectSoundOut();
+                output.Init(mixer);
+                output.Play();
+            }
+        }
+       
+
+        private void openFileDialog1_FileOk(object sender, CancelEventArgs e)
+        {
+
+        }
+
         private void buttonOpen_Click(object sender, EventArgs e)
         {
             OpenFileDialog ofd = new OpenFileDialog();
