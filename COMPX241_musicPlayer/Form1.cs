@@ -14,6 +14,7 @@ using NAudio.CoreAudioApi;
 using AxWMPLib;
 using NAudio.Gui;
 using System.Diagnostics;
+using System.IO;
 
 
 namespace COMPX241_musicPlayer
@@ -45,6 +46,10 @@ namespace COMPX241_musicPlayer
         private void track_List_SelectedIndexChanged(object sender, EventArgs e)
         {
             Player.URL = paths[track_List.SelectedIndex];
+
+            string filePath = paths[track_List.SelectedIndex];
+
+            DisplayWaveform(new string[] { filePath });
         }
 
         private void buttonStop_Click(object sender, EventArgs e)
@@ -255,11 +260,11 @@ namespace COMPX241_musicPlayer
             }
         }
 
-       private List<string> selectedWavFiles = new List<string>();
+       //private List<string> selectedWavFiles = new List<string>();
 
         private void checkedListBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            string filePath = paths[e.Index];
+            /*string filePath = paths[e.Index];
 
             if (e.CurrentValue == CheckState.Unchecked)
             {
@@ -283,11 +288,78 @@ namespace COMPX241_musicPlayer
                 output = new DirectSoundOut();
                 output.Init(mixer);
                 output.Play();
-            }
+            }*/
         }
        
 
         private void openFileDialog1_FileOk(object sender, CancelEventArgs e)
+        {
+
+        }
+        private void DisplayWaveform(string[] filePaths)
+        {
+            if (filePaths == null || filePaths.Length == 0)
+                return;
+
+            Bitmap waveformBitmap = new Bitmap(pictureBox3.Width, pictureBox3.Height);
+            Graphics graphics = Graphics.FromImage(waveformBitmap);
+
+            int numFiles = filePaths.Length;
+            int bytesPerSample = 0;
+            long maxSampleCount = 0;
+
+            // Find the maximum sample count and bytes per sample among the files
+            for (int i = 0; i < numFiles; i++)
+            {
+                using (WaveFileReader reader = new WaveFileReader(filePaths[i]))
+                {
+                    bytesPerSample = Math.Max(bytesPerSample, reader.WaveFormat.BitsPerSample / 8);
+                    maxSampleCount = Math.Max(maxSampleCount, reader.SampleCount);
+                }
+            }
+
+            int samplesPerPixel = (int)(maxSampleCount / (long)pictureBox3.Width);
+            byte[] buffer = new byte[samplesPerPixel * bytesPerSample];
+
+            for (int x = 0; x < pictureBox3.Width; x++)
+            {
+                for (int i = 0; i < numFiles; i++)
+                {
+                    using (WaveFileReader reader = new WaveFileReader(filePaths[i]))
+                    {
+                        reader.Position = x * samplesPerPixel * bytesPerSample;
+                        reader.Read(buffer, 0, buffer.Length);
+
+                        float maxAmplitude = 0;
+
+                        for (int j = 0; j < buffer.Length; j += bytesPerSample)
+                        {
+                            float sample = 0;
+
+                            if (bytesPerSample == 2)
+                                sample = BitConverter.ToInt16(buffer, j) / 32768f;
+                            else if (bytesPerSample == 4)
+                                sample = BitConverter.ToInt32(buffer, j) / 2147483648f;
+
+                            if (Math.Abs(sample) > maxAmplitude)
+                                maxAmplitude = Math.Abs(sample);
+                        }
+
+                        int lineHeight = (int)(maxAmplitude * pictureBox3.Height / 2);
+                        int y = i * (pictureBox3.Height / numFiles) + (pictureBox3.Height / numFiles - lineHeight) / 2;
+                        int height = lineHeight * 2;
+
+                        graphics.DrawLine(Pens.Black, x, y, x, y + height);
+                    }
+                }
+            }
+
+            pictureBox3.Image = waveformBitmap;
+        }
+
+
+
+        private void pictureBox3_Click(object sender, EventArgs e)
         {
 
         }
@@ -304,6 +376,9 @@ namespace COMPX241_musicPlayer
                 {
                     track_List.Items.Add(paths[i]);
                 }
+
+                string[] filePaths = paths.Take(3).ToArray();
+                DisplayWaveform(filePaths);
             }
 
         }
