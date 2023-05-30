@@ -47,7 +47,6 @@
             this.pic_art = new System.Windows.Forms.PictureBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.trackBar1 = new System.Windows.Forms.TrackBar();
-            this.Player = new AxWMPLib.AxWindowsMediaPlayer();
             this.trackBar2 = new System.Windows.Forms.TrackBar();
             this.wave_list = new System.Windows.Forms.ListBox();
             this.Volume = new System.Windows.Forms.Label();
@@ -61,16 +60,17 @@
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.openFileDialog2 = new System.Windows.Forms.OpenFileDialog();
             this.pictureBox3 = new System.Windows.Forms.PictureBox();
+            this.Player = new AxWMPLib.AxWindowsMediaPlayer();
             this.menuStripUpload.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pic_art)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.Player)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar4)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Player)).BeginInit();
             this.SuspendLayout();
             // 
             // buttonNext
@@ -252,17 +252,6 @@
             this.trackBar1.TabIndex = 15;
             this.trackBar1.Scroll += new System.EventHandler(this.trackBar1_Scroll);
             // 
-            // Player
-            // 
-            this.Player.Enabled = true;
-            this.Player.Location = new System.Drawing.Point(24, 697);
-            this.Player.Margin = new System.Windows.Forms.Padding(6);
-            this.Player.Name = "Player";
-            this.Player.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("Player.OcxState")));
-            this.Player.Size = new System.Drawing.Size(880, 36);
-            this.Player.TabIndex = 14;
-            this.Player.Enter += new System.EventHandler(this.Player_Enter);
-            // 
             // trackBar2
             // 
             this.trackBar2.Location = new System.Drawing.Point(24, 817);
@@ -353,7 +342,7 @@
             "Audio 2",
             "Audio 3",
             "Play All Audios"});
-            this.checkedListBox1.Location = new System.Drawing.Point(1346, 385);
+            this.checkedListBox1.Location = new System.Drawing.Point(1346, 79);
             this.checkedListBox1.Name = "checkedListBox1";
             this.checkedListBox1.Size = new System.Drawing.Size(213, 116);
             this.checkedListBox1.TabIndex = 24;
@@ -370,12 +359,23 @@
             // 
             // pictureBox3
             // 
-            this.pictureBox3.Location = new System.Drawing.Point(913, 385);
+            this.pictureBox3.Location = new System.Drawing.Point(913, 200);
             this.pictureBox3.Name = "pictureBox3";
-            this.pictureBox3.Size = new System.Drawing.Size(427, 116);
+            this.pictureBox3.Size = new System.Drawing.Size(646, 301);
             this.pictureBox3.TabIndex = 25;
             this.pictureBox3.TabStop = false;
             this.pictureBox3.Click += new System.EventHandler(this.pictureBox3_Click);
+            // 
+            // Player
+            // 
+            this.Player.Enabled = true;
+            this.Player.Location = new System.Drawing.Point(24, 697);
+            this.Player.Margin = new System.Windows.Forms.Padding(6);
+            this.Player.Name = "Player";
+            this.Player.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("Player.OcxState")));
+            this.Player.Size = new System.Drawing.Size(880, 36);
+            this.Player.TabIndex = 14;
+            this.Player.Enter += new System.EventHandler(this.Player_Enter);
             // 
             // musicPlayer
             // 
@@ -417,12 +417,12 @@
             ((System.ComponentModel.ISupportInitialize)(this.pic_art)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.Player)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar4)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Player)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
