@@ -34,6 +34,7 @@
             this.menuStripUpload = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openWAVToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.sepperateAudioFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.buttonOpen = new System.Windows.Forms.Button();
             this.track_List = new System.Windows.Forms.ListBox();
             this.trackBar2 = new System.Windows.Forms.TrackBar();
@@ -57,8 +58,8 @@
             this.checkBox2 = new System.Windows.Forms.CheckBox();
             this.checkBox3 = new System.Windows.Forms.CheckBox();
             this.button1 = new System.Windows.Forms.Button();
-            this.sepperateAudioFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.button2 = new System.Windows.Forms.Button();
+            this.button3 = new System.Windows.Forms.Button();
             this.menuStripUpload.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar3)).BeginInit();
@@ -121,9 +122,16 @@
             // openWAVToolStripMenuItem
             // 
             this.openWAVToolStripMenuItem.Name = "openWAVToolStripMenuItem";
-            this.openWAVToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.openWAVToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
             this.openWAVToolStripMenuItem.Text = "Open Audio File";
             this.openWAVToolStripMenuItem.Click += new System.EventHandler(this.openWAVToolStripMenuItem_Click);
+            // 
+            // sepperateAudioFileToolStripMenuItem
+            // 
+            this.sepperateAudioFileToolStripMenuItem.Name = "sepperateAudioFileToolStripMenuItem";
+            this.sepperateAudioFileToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.sepperateAudioFileToolStripMenuItem.Text = "Separate Audio File";
+            this.sepperateAudioFileToolStripMenuItem.Click += new System.EventHandler(this.sepperateAudioFileToolStripMenuItem_Click);
             // 
             // buttonOpen
             // 
@@ -139,7 +147,7 @@
             // track_List
             // 
             this.track_List.BackColor = System.Drawing.SystemColors.ScrollBar;
-            this.track_List.ForeColor = System.Drawing.Color.DarkOrange;
+            this.track_List.ForeColor = System.Drawing.Color.Black;
             this.track_List.FormattingEnabled = true;
             this.track_List.Location = new System.Drawing.Point(885, 94);
             this.track_List.Name = "track_List";
@@ -154,6 +162,7 @@
             this.trackBar2.Size = new System.Drawing.Size(272, 45);
             this.trackBar2.TabIndex = 16;
             this.trackBar2.TickStyle = System.Windows.Forms.TickStyle.TopLeft;
+            this.trackBar2.Scroll += new System.EventHandler(this.trackBar2_Scroll);
             // 
             // trackBar3
             // 
@@ -189,7 +198,7 @@
             // 
             this.pictureBox3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pictureBox3.Location = new System.Drawing.Point(79, 94);
-            this.pictureBox3.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.pictureBox3.Margin = new System.Windows.Forms.Padding(2);
             this.pictureBox3.Name = "pictureBox3";
             this.pictureBox3.Size = new System.Drawing.Size(474, 65);
             this.pictureBox3.TabIndex = 25;
@@ -325,13 +334,6 @@
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
-            // sepperateAudioFileToolStripMenuItem
-            // 
-            this.sepperateAudioFileToolStripMenuItem.Name = "sepperateAudioFileToolStripMenuItem";
-            this.sepperateAudioFileToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
-            this.sepperateAudioFileToolStripMenuItem.Text = "Sepperate Audio File";
-            this.sepperateAudioFileToolStripMenuItem.Click += new System.EventHandler(this.sepperateAudioFileToolStripMenuItem_Click);
-            // 
             // button2
             // 
             this.button2.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
@@ -343,12 +345,24 @@
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
+            // button3
+            // 
+            this.button3.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.button3.Location = new System.Drawing.Point(570, 35);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(127, 33);
+            this.button3.TabIndex = 41;
+            this.button3.Text = "Separate";
+            this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
+            // 
             // musicPlayer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(1176, 471);
+            this.Controls.Add(this.button3);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.checkBox3);
@@ -428,6 +442,7 @@
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.ToolStripMenuItem sepperateAudioFileToolStripMenuItem;
         private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button button3;
     }
 }
 

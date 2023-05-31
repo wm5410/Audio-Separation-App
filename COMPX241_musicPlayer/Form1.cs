@@ -27,7 +27,45 @@ namespace COMPX241_musicPlayer
         //MP3
         private NAudio.Wave.BlockAlignReductionStream stream = null;
 
-        
+
+        //Creates a class to be displayed in the listbox
+        public class AudioFile
+        {
+            public string Name { get; set; }
+            public string Path { get; set; }
+        }
+        public void listbox()
+        {
+            track_List.Items.Clear();
+            string[] getfiles = Directory.GetFiles("C:\\Users\\willi\\Music"); //\\separated\\htdemucs\\test");
+            string[] dirs = Directory.GetDirectories("C:\\Users\\willi\\Music"); // \\separated\\htdemucs\\test");
+
+            track_List.DisplayMember = "Name";
+            track_List.ValueMember = "Path";
+
+            foreach (string file in getfiles)
+            {
+                // Create an item for the list
+                var thisItem = new AudioFile
+                {
+                    Name = Path.GetFileName(file),
+                    Path = file
+                };
+
+                track_List.Items.Add(thisItem);
+            }
+            foreach (string dir in dirs)
+            {
+                // Create an item for the list
+                var thisItem = new AudioFile
+                {
+                    Name = Path.GetFileName(dir),
+                    Path = dir
+                };
+
+                track_List.Items.Add(thisItem);
+            }
+        }
 
         public musicPlayer()
         {
@@ -38,18 +76,22 @@ namespace COMPX241_musicPlayer
             var devices = enumerator.EnumerateAudioEndPoints(NAudio.CoreAudioApi.DataFlow.All, NAudio.CoreAudioApi.DeviceState.Active);
             comboBox1.Items.AddRange(devices.ToArray());
 
-            
+            listbox();
 
         }
         string[] paths, files;
 
         private void track_List_SelectedIndexChanged(object sender, EventArgs e)
         {
+
             //Player.URL = paths[track_List.SelectedIndex];
+            if (track_List.SelectedIndex == -1 || track_List.SelectedIndex == 0) { return; }
+            else
+            {
+                //string filePath = paths[track_List.SelectedIndex];
 
-            string filePath = paths[track_List.SelectedIndex];
-
-            DisplayWaveform(new string[] { filePath });
+                //DisplayWaveform(new string[] { filePath });
+            }
         }
 
         private void buttonStop_Click(object sender, EventArgs e)
@@ -96,6 +138,8 @@ namespace COMPX241_musicPlayer
 
         private void timer1_Tick(object sender, EventArgs e)
         {
+            
+
             //if (Player.playState == WMPLib.WMPPlayState.wmppsPlaying)
             //{
             //    progressBar1.Maximum = (int)Player.Ctlcontrols.currentItem.duration;
@@ -113,19 +157,19 @@ namespace COMPX241_musicPlayer
             //Console.WriteLine(leftVolume.ToString());
             //int rightVolume = defaultDevice.AudioMeterInformation.PeakValues;
 
-            MMDeviceEnumerator devEnum = new MMDeviceEnumerator();
-            MMDevice defaultDevice = devEnum.GetDefaultAudioEndpoint(DataFlow.Render, Role.Multimedia);
+            //MMDeviceEnumerator devEnum = new MMDeviceEnumerator();
+            //MMDevice defaultDevice = devEnum.GetDefaultAudioEndpoint(DataFlow.Render, Role.Multimedia);
             //Console.WriteLine("Sending Volume level through " + port.PortName);
             //Console.WriteLine("\rCurrent Level: " + defaultDevice.AudioMeterInformation.MasterPeakValue.ToString());
-            
-            
+
+
             //Console.WriteLine("\rCurrent Level: " + defaultDevice.AudioMeterInformation.PeakValues[0]);
             //progressBar1.Value = (int)defaultDevice.AudioMeterInformation.PeakValues[0];
             //Test levels of audio
             //textBox1.Text = (defaultDevice.AudioMeterInformation.PeakValues[0] * 100).ToString();
             //textBox1.Text = defaultDevice.AudioClient.AudioStreamVolume.ToString();
 
-            
+
 
         }
 
@@ -387,6 +431,52 @@ namespace COMPX241_musicPlayer
                     
                 }
             }
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            string audioPath = track_List.Text;
+            //MessageBox.Show(audioPath);
+            //Start process to write to cmd
+            Process process = new Process();
+            //Code to write to cmd prompt
+            process.StartInfo.FileName = "cmd.exe";
+            process.StartInfo.CreateNoWindow = true;
+            process.StartInfo.RedirectStandardOutput = true;
+            process.StartInfo.RedirectStandardInput = true;
+            process.StartInfo.UseShellExecute = false;
+            process.StartInfo.WorkingDirectory = "C:\\Users\\willi\\anaconda3\\Scripts";
+
+            process.Start();
+
+            using (var sw = process.StandardInput)
+            {
+                if (sw.BaseStream.CanWrite)
+                {
+                    //Activate anaconda 
+                    sw.WriteLine("C:\\Users\\willi\\anaconda3\\Scripts\\activate.bat");
+                    //Activate environment
+                    sw.WriteLine("activate base");
+
+                    sw.WriteLine("cd/");
+                    sw.WriteLine("cd Users");
+                    sw.WriteLine("cd willi");
+                    sw.WriteLine("cd Music");
+                    //Code to execute
+                    sw.WriteLine("demucs " + audioPath);
+                }
+            }
+
+            while (!process.StandardOutput.EndOfStream)
+            {
+                var line = process.StandardOutput.ReadLine();
+                Console.WriteLine(line);
+            }
+        }
+
+        private void trackBar2_Scroll(object sender, EventArgs e)
+        {
+            
         }
 
         private void buttonOpen_Click(object sender, EventArgs e)
