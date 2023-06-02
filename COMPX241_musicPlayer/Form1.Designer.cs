@@ -53,7 +53,7 @@
             this.pictureBox4 = new System.Windows.Forms.PictureBox();
             this.trackBar8 = new System.Windows.Forms.TrackBar();
             this.trackBar9 = new System.Windows.Forms.TrackBar();
-            this.Track1 = new System.Windows.Forms.CheckBox();
+            this.checkbox4 = new System.Windows.Forms.CheckBox();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.checkBox2 = new System.Windows.Forms.CheckBox();
             this.checkBox3 = new System.Windows.Forms.CheckBox();
@@ -122,14 +122,14 @@
             // openWAVToolStripMenuItem
             // 
             this.openWAVToolStripMenuItem.Name = "openWAVToolStripMenuItem";
-            this.openWAVToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
+            this.openWAVToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
             this.openWAVToolStripMenuItem.Text = "Open Audio File";
             this.openWAVToolStripMenuItem.Click += new System.EventHandler(this.openWAVToolStripMenuItem_Click);
             // 
             // sepperateAudioFileToolStripMenuItem
             // 
             this.sepperateAudioFileToolStripMenuItem.Name = "sepperateAudioFileToolStripMenuItem";
-            this.sepperateAudioFileToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.sepperateAudioFileToolStripMenuItem.Size = new System.Drawing.Size(175, 22);
             this.sepperateAudioFileToolStripMenuItem.Text = "Separate Audio File";
             this.sepperateAudioFileToolStripMenuItem.Click += new System.EventHandler(this.sepperateAudioFileToolStripMenuItem_Click);
             // 
@@ -283,15 +283,15 @@
             this.trackBar9.TabIndex = 32;
             this.trackBar9.TickStyle = System.Windows.Forms.TickStyle.TopLeft;
             // 
-            // Track1
+            // checkbox4
             // 
-            this.Track1.AutoSize = true;
-            this.Track1.Location = new System.Drawing.Point(8, 94);
-            this.Track1.Name = "Track1";
-            this.Track1.Size = new System.Drawing.Size(63, 17);
-            this.Track1.TabIndex = 35;
-            this.Track1.Text = "Track 1";
-            this.Track1.UseVisualStyleBackColor = true;
+            this.checkbox4.AutoSize = true;
+            this.checkbox4.Location = new System.Drawing.Point(8, 94);
+            this.checkbox4.Name = "checkbox4";
+            this.checkbox4.Size = new System.Drawing.Size(63, 17);
+            this.checkbox4.TabIndex = 35;
+            this.checkbox4.Text = "Track 1";
+            this.checkbox4.UseVisualStyleBackColor = true;
             // 
             // checkBox1
             // 
@@ -330,7 +330,7 @@
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(127, 33);
             this.button1.TabIndex = 39;
-            this.button1.Text = "Play All";
+            this.button1.Text = "Stop";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
@@ -368,7 +368,7 @@
             this.Controls.Add(this.checkBox3);
             this.Controls.Add(this.checkBox2);
             this.Controls.Add(this.checkBox1);
-            this.Controls.Add(this.Track1);
+            this.Controls.Add(this.checkbox4);
             this.Controls.Add(this.pictureBox4);
             this.Controls.Add(this.trackBar8);
             this.Controls.Add(this.trackBar9);
@@ -435,7 +435,7 @@
         private System.Windows.Forms.PictureBox pictureBox4;
         private System.Windows.Forms.TrackBar trackBar8;
         private System.Windows.Forms.TrackBar trackBar9;
-        private System.Windows.Forms.CheckBox Track1;
+        private System.Windows.Forms.CheckBox checkbox4;
         private System.Windows.Forms.CheckBox checkBox1;
         private System.Windows.Forms.CheckBox checkBox2;
         private System.Windows.Forms.CheckBox checkBox3;

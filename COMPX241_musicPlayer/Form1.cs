@@ -29,8 +29,12 @@ namespace COMPX241_musicPlayer
 
         public static WaveStream stream1;
         public static WaveStream stream2;
+        public static WaveStream stream3;
+        public static WaveStream stream4;
         public static WaveChannel32 first32;
         public static WaveChannel32 second32;
+        public static WaveChannel32 third32;
+        public static WaveChannel32 fourth32;
         public static MixingWaveProvider32 mixer;
         public static DirectSoundOut dso;
 
@@ -45,10 +49,10 @@ namespace COMPX241_musicPlayer
         public void listbox()
         {
             track_List.Items.Clear();
-            //string[] getfiles = Directory.GetFiles("C:\\Users\\willi\\Music"); //\\separated\\htdemucs\\test");
-            string[] getfiles = Directory.GetFiles("C:\\Users\\William\\Music"); //\\separated\\htdemucs\\test");
-            //string[] dirs = Directory.GetDirectories("C:\\Users\\willi\\Music"); // \\separated\\htdemucs\\test");
-            string[] dirs = Directory.GetDirectories("C:\\Users\\William\\Music"); // \\separated\\htdemucs\\test");
+            string[] getfiles = Directory.GetFiles("C:\\Users\\willi\\Music"); //\\separated\\htdemucs\\test");
+            //string[] getfiles = Directory.GetFiles("C:\\Users\\William\\Music"); //\\separated\\htdemucs\\test");
+            string[] dirs = Directory.GetDirectories("C:\\Users\\willi\\Music"); // \\separated\\htdemucs\\test");
+            //string[] dirs = Directory.GetDirectories("C:\\Users\\William\\Music"); // \\separated\\htdemucs\\test");
 
             track_List.DisplayMember = "Name";
             track_List.ValueMember = "Path";
@@ -87,8 +91,6 @@ namespace COMPX241_musicPlayer
             comboBox1.Items.AddRange(devices.ToArray());
 
             listbox();
-
-            
 
         }
         string[] paths, files;
@@ -180,8 +182,6 @@ namespace COMPX241_musicPlayer
             //Test levels of audio
             //textBox1.Text = (defaultDevice.AudioMeterInformation.PeakValues[0] * 100).ToString();
             //textBox1.Text = defaultDevice.AudioClient.AudioStreamVolume.ToString();
-
-
 
         }
 
@@ -448,42 +448,59 @@ namespace COMPX241_musicPlayer
 
         private void button1_Click(object sender, EventArgs e)
         {
-
+            dso.Stop();
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-            //if (Player.playState == WMPLib.WMPPlayState.wmppsPlaying)
+            //string file = "";
+
+            //OpenFileDialog open = new OpenFileDialog();
+            //open.Filter = "Audio FIle (*.mp3;*.wav)|*.mp3;*.wav;";
+            //open.Multiselect = true;
+            //if (open.ShowDialog() == DialogResult.OK) //return;
             //{
-            //    progressBar1.Maximum = (int)Player.Ctlcontrols.currentItem.duration;
-            //    progressBar1.Value = (int)Player.Ctlcontrols.currentPosition;
+            //    file = Path.GetFileName(open.FileName);
+
+            //}
+            //else
+            //{
+            //    MessageBox.Show("Error");
             //}
 
 
-            //NAudio.CoreAudioApi.MMDeviceEnumerator devEnum = new NAudio.CoreAudioApi.MMDeviceEnumerator();
-            //NAudio.CoreAudioApi.MMDevice defaultDevice = devEnum.GetDefaultAudioEndpoint(NAudio.CoreAudioApi.DataFlow.Render, NAudio.CoreAudioApi.Role.Multimedia);
-
-
-            //MMDeviceEnumerator devEnum = new MMDeviceEnumerator();
-            //MMDevice defaultDevice = devEnum.GetDefaultAudioEndpoint(DataFlow.Render, Role.Multimedia);
-
-
-            stream1 = new WaveFileReader("a.wav");
-            stream2 = new WaveFileReader("b.wav");
+            stream1 = new WaveFileReader("Europe_TheFinalCountdown\\bass.wav");
+            stream2 = new WaveFileReader("Europe_TheFinalCountdown\\drums.wav");
+            stream3 = new WaveFileReader("Europe_TheFinalCountdown\\other.wav");
+            stream4 = new WaveFileReader("Europe_TheFinalCountdown\\vocals.wav");
 
             first32 = new WaveChannel32(stream1);
             second32 = new WaveChannel32(stream2);
-
+            third32 = new WaveChannel32(stream3);
+            fourth32 = new WaveChannel32(stream4);
+            
             mixer = new MixingWaveProvider32();
-            mixer.AddInputStream(first32); 
-            mixer.AddInputStream(second32);
+            if (checkbox4.Checked)
+            {
+                mixer.AddInputStream(first32);
+            }
+            if (checkBox1.Checked)
+            {
+                mixer.AddInputStream(second32);
+            }
+            if (checkBox2.Checked)
+            {
+                mixer.AddInputStream(third32);
+            }
+            if (checkBox3.Checked)
+            {
+                mixer.AddInputStream(fourth32);
+            }
 
             dso = new DirectSoundOut(DirectSoundOut.DSDEVID_DefaultPlayback);
+
             dso.Init(mixer);
-
             dso.Play();
-
-
         }
 
         private void button3_Click(object sender, EventArgs e)
