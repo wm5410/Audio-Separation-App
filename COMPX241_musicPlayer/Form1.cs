@@ -27,18 +27,28 @@ namespace COMPX241_musicPlayer
         //MP3
         private NAudio.Wave.BlockAlignReductionStream stream = null;
 
+        public static WaveStream stream1;
+        public static WaveStream stream2;
+        public static WaveChannel32 first32;
+        public static WaveChannel32 second32;
+        public static MixingWaveProvider32 mixer;
+        public static DirectSoundOut dso;
+
 
         //Creates a class to be displayed in the listbox
         public class AudioFile
         {
             public string Name { get; set; }
             public string Path { get; set; }
+
         }
         public void listbox()
         {
             track_List.Items.Clear();
-            string[] getfiles = Directory.GetFiles("C:\\Users\\willi\\Music"); //\\separated\\htdemucs\\test");
-            string[] dirs = Directory.GetDirectories("C:\\Users\\willi\\Music"); // \\separated\\htdemucs\\test");
+            //string[] getfiles = Directory.GetFiles("C:\\Users\\willi\\Music"); //\\separated\\htdemucs\\test");
+            string[] getfiles = Directory.GetFiles("C:\\Users\\William\\Music"); //\\separated\\htdemucs\\test");
+            //string[] dirs = Directory.GetDirectories("C:\\Users\\willi\\Music"); // \\separated\\htdemucs\\test");
+            string[] dirs = Directory.GetDirectories("C:\\Users\\William\\Music"); // \\separated\\htdemucs\\test");
 
             track_List.DisplayMember = "Name";
             track_List.ValueMember = "Path";
@@ -77,6 +87,8 @@ namespace COMPX241_musicPlayer
             comboBox1.Items.AddRange(devices.ToArray());
 
             listbox();
+
+            
 
         }
         string[] paths, files;
@@ -379,6 +391,22 @@ namespace COMPX241_musicPlayer
 
         private void sepperateAudioFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            string file = "";
+
+            OpenFileDialog open = new OpenFileDialog();
+            open.Filter = "Audio FIle (*.mp3;*.wav)|*.mp3;*.wav;";
+            open.Multiselect = true;
+            if (open.ShowDialog() == DialogResult.OK) //return;
+            {
+                file = Path.GetFileName(open.FileName);
+
+            }
+            else
+            {
+                MessageBox.Show("Error");
+            }
+        
+
             //Start process to write to cmd
             Process process = new Process();
             //Code to write to cmd prompt
@@ -390,22 +418,24 @@ namespace COMPX241_musicPlayer
             process.StartInfo.WorkingDirectory = "C:\\Users\\willi\\anaconda3\\Scripts";
 
             process.Start();
-
-            using (var sw = process.StandardInput)
+            if (file != null)
             {
-                if (sw.BaseStream.CanWrite)
+                using (var sw = process.StandardInput)
                 {
-                    //Activate anaconda 
-                    sw.WriteLine("C:\\Users\\willi\\anaconda3\\Scripts\\activate.bat");
-                    //Activate environment
-                    sw.WriteLine("activate base");
+                    if (sw.BaseStream.CanWrite)
+                    {
+                        //Activate anaconda 
+                        sw.WriteLine("C:\\Users\\willi\\anaconda3\\Scripts\\activate.bat");
+                        //Activate environment
+                        sw.WriteLine("activate base");
 
-                    sw.WriteLine("cd/");
-                    sw.WriteLine("cd Users");
-                    sw.WriteLine("cd willi");
-                    sw.WriteLine("cd Music");
-                    //Code to execute
-                    sw.WriteLine("demucs MJ.mp3");
+                        sw.WriteLine("cd/");
+                        sw.WriteLine("cd Users");
+                        sw.WriteLine("cd willi");
+                        sw.WriteLine("cd Music");
+                        //Code to execute
+                        sw.WriteLine("demucs " + file);
+                    }
                 }
             }
 
@@ -423,14 +453,37 @@ namespace COMPX241_musicPlayer
 
         private void button2_Click(object sender, EventArgs e)
         {
-            for(int i = 0; i < 4; i++)
-            {
-                if(i == 0)
-                {
-                    
-                    
-                }
-            }
+            //if (Player.playState == WMPLib.WMPPlayState.wmppsPlaying)
+            //{
+            //    progressBar1.Maximum = (int)Player.Ctlcontrols.currentItem.duration;
+            //    progressBar1.Value = (int)Player.Ctlcontrols.currentPosition;
+            //}
+
+
+            //NAudio.CoreAudioApi.MMDeviceEnumerator devEnum = new NAudio.CoreAudioApi.MMDeviceEnumerator();
+            //NAudio.CoreAudioApi.MMDevice defaultDevice = devEnum.GetDefaultAudioEndpoint(NAudio.CoreAudioApi.DataFlow.Render, NAudio.CoreAudioApi.Role.Multimedia);
+
+
+            //MMDeviceEnumerator devEnum = new MMDeviceEnumerator();
+            //MMDevice defaultDevice = devEnum.GetDefaultAudioEndpoint(DataFlow.Render, Role.Multimedia);
+
+
+            stream1 = new WaveFileReader("a.wav");
+            stream2 = new WaveFileReader("b.wav");
+
+            first32 = new WaveChannel32(stream1);
+            second32 = new WaveChannel32(stream2);
+
+            mixer = new MixingWaveProvider32();
+            mixer.AddInputStream(first32); 
+            mixer.AddInputStream(second32);
+
+            dso = new DirectSoundOut(DirectSoundOut.DSDEVID_DefaultPlayback);
+            dso.Init(mixer);
+
+            dso.Play();
+
+
         }
 
         private void button3_Click(object sender, EventArgs e)
