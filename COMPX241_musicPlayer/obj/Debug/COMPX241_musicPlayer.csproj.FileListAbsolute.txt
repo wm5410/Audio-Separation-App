@@ -149,3 +149,4 @@ C:\Users\willi\Source\Repos\PlayItAgainSamv\COMPX241_musicPlayer\obj\Debug\COMPX
 C:\Users\willi\Source\Repos\PlayItAgainSamv\COMPX241_musicPlayer\obj\Debug\COMPX241_musicPlayer.csproj.CopyComplete
 C:\Users\willi\Source\Repos\PlayItAgainSamv\COMPX241_musicPlayer\obj\Debug\COMPX241_musicPlayer.exe
 C:\Users\willi\Source\Repos\PlayItAgainSamv\COMPX241_musicPlayer\obj\Debug\COMPX241_musicPlayer.pdb
+C:\Users\willi\Source\Repos\PlayItAgainSamv\COMPX241_musicPlayer\bin\Debug\Microsoft.WindowsAPICodePack.Shell.dll

@@ -15,7 +15,9 @@ using AxWMPLib;
 using NAudio.Gui;
 using System.Diagnostics;
 using System.IO;
-
+using NAudio.Wave.SampleProviders;
+using System.Threading;
+using Microsoft.WindowsAPICodePack.Dialogs;
 
 namespace COMPX241_musicPlayer
 {
@@ -197,6 +199,14 @@ namespace COMPX241_musicPlayer
 
         private void openWAVToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            Open();
+        }
+
+        private void Open()
+        {
+            var inPath = @"C:\Users\markh\example.mp3";
+
+
             OpenFileDialog open = new OpenFileDialog();
             open.Filter = "Audio FIle (*.mp3;*.wav)|*.mp3;*.wav;";
             open.Multiselect = true;
@@ -453,6 +463,20 @@ namespace COMPX241_musicPlayer
 
         private void button2_Click(object sender, EventArgs e)
         {
+            //using (var fbd = new FolderBrowserDialog())
+            //{
+            //    fbd.SelectedPath = @"c:\willi";
+            //    DialogResult result = fbd.ShowDialog();
+                
+
+            //    if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
+            //    {
+            //        string[] files = Directory.GetFiles(fbd.SelectedPath);
+
+            //        System.Windows.Forms.MessageBox.Show("Files found: " + files.Length.ToString(), "Message" + files);
+            //    }
+            //}
+
             //string file = "";
 
             //OpenFileDialog open = new OpenFileDialog();
@@ -549,22 +573,32 @@ namespace COMPX241_musicPlayer
             
         }
 
+        //private void button4_Click(object sender, EventArgs e)
+        //{
+        //    var inPath = @"C:\Users\willi\Music\MJ.mp3";
+        //    var semitone = Math.Pow(2, 1.0 / 12);
+        //    var upOneTone = semitone * semitone;
+        //    var downOneTone = 1.0 / upOneTone;
+        //    using (var reader = new MediaFoundationReader(inPath))
+        //    {
+        //        var pitch = new SmbPitchShiftingSampleProvider(reader.ToSampleProvider());
+        //        using (var device = new WaveOutEvent())
+        //        {
+        //            pitch.PitchFactor = (float)upOneTone; // or downOneTone
+        //                                                  // just playing the first 10 seconds of the file
+        //            device.Init(pitch.Take(TimeSpan.FromSeconds(10)));
+        //            device.Play();
+        //            while (device.PlaybackState == PlaybackState.Playing)
+        //            {
+        //                Thread.Sleep(500);
+        //            }
+        //        }
+        //    }
+        //}
+
         private void buttonOpen_Click(object sender, EventArgs e)
         {
-            OpenFileDialog ofd = new OpenFileDialog();
-            ofd.Multiselect = true;
-            if (ofd.ShowDialog() == DialogResult.OK) //return;
-            {
-                files = ofd.FileNames;
-                paths = ofd.FileNames;
-                for (int i = 0; i < paths.Length; i++)
-                {
-                    track_List.Items.Add(paths[i]);
-                }
-
-                //string[] filePaths = paths.Take(3).ToArray();
-                //DisplayWaveform(filePaths);
-            }
+            Open();
 
         }
 

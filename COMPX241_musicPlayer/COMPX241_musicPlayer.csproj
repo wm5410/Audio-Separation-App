@@ -33,6 +33,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.WindowsAPICodePack.Shell">
+      <HintPath>..\..\..\..\Downloads\microsoft.windowsapicodepack.shell.dll-53467\Microsoft.WindowsAPICodePack.Shell.dll</HintPath>
+    </Reference>
     <Reference Include="NAudio">
       <HintPath>..\..\..\..\Downloads\naudio\NAudio.dll</HintPath>
     </Reference>
