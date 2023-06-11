@@ -18,13 +18,16 @@ using System.IO;
 using NAudio.Wave.SampleProviders;
 using System.Threading;
 using Microsoft.WindowsAPICodePack.Dialogs;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using System.Net.NetworkInformation;
+using static COMPX241_musicPlayer.musicPlayer;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
 namespace COMPX241_musicPlayer
 {
     public partial class musicPlayer : Form
     {
-        //NAudio test
-        //private NAudio.Wave.WaveFileReader wave = null;
+
         private NAudio.Wave.DirectSoundOut output = null;
         //MP3
         private NAudio.Wave.BlockAlignReductionStream stream = null;
@@ -39,6 +42,8 @@ namespace COMPX241_musicPlayer
         public static WaveChannel32 fourth32;
         public static MixingWaveProvider32 mixer;
         public static DirectSoundOut dso;
+
+        private List<PictureBox> pictureBoxes;
 
 
         //Creates a class to be displayed in the listbox
@@ -70,17 +75,17 @@ namespace COMPX241_musicPlayer
 
                 track_List.Items.Add(thisItem);
             }
-            foreach (string dir in dirs)
-            {
-                // Create an item for the list
-                var thisItem = new AudioFile
-                {
-                    Name = Path.GetFileName(dir),
-                    Path = dir
-                };
+            //foreach (string dir in dirs)
+            //{
+            //    // Create an item for the list
+            //    var thisItem = new AudioFile
+            //    {
+            //        Name = Path.GetFileName(dir),
+            //        Path = dir
+            //    };
 
-                track_List.Items.Add(thisItem);
-            }
+            //    track_List.Items.Add(thisItem);
+            //}
         }
 
         public musicPlayer()
@@ -90,24 +95,36 @@ namespace COMPX241_musicPlayer
             //Add audio deviced to combo box
             NAudio.CoreAudioApi.MMDeviceEnumerator enumerator = new NAudio.CoreAudioApi.MMDeviceEnumerator();
             var devices = enumerator.EnumerateAudioEndPoints(NAudio.CoreAudioApi.DataFlow.All, NAudio.CoreAudioApi.DeviceState.Active);
-            comboBox1.Items.AddRange(devices.ToArray());
+
+            pictureBoxes = new List<PictureBox> { pictureBox1, pictureBox2, pictureBox3, pictureBox4 };
 
             listbox();
+
 
         }
         string[] paths, files;
 
         private void track_List_SelectedIndexChanged(object sender, EventArgs e)
         {
+            //if (track_List.SelectedIndex == -1 || track_List.SelectedIndex == 0) { return; }
+            //else
+            //{
+            //    string filePath = ((AudioFile)track_List.SelectedItem).Path;
 
-            //Player.URL = paths[track_List.SelectedIndex];
-            if (track_List.SelectedIndex == -1 || track_List.SelectedIndex == 0) { return; }
-            else
-            {
-                //string filePath = paths[track_List.SelectedIndex];
+            //    // Find the next available PictureBox
+            //    PictureBox nextPictureBox = pictureBoxes.FirstOrDefault(p => p.Image == null);
 
-                //DisplayWaveform(new string[] { filePath });
-            }
+            //    if (nextPictureBox != null)
+            //    {
+            //        // Display the waveform in the next PictureBox
+            //        DisplayWaveform(filePath, nextPictureBox);
+            //    }
+            //    else
+            //    {
+            //        MessageBox.Show("No available PictureBox found.");
+            //    }
+            //}
+
         }
 
         private void buttonStop_Click(object sender, EventArgs e)
@@ -117,23 +134,57 @@ namespace COMPX241_musicPlayer
 
         private void buttonPause_Click(object sender, EventArgs e)
         {
+              
             if (output != null)
             {
                 output.Stop();
-                buttonPause.Enabled = false;
-                buttonPlay.Enabled = true;
             }
+            if (dso != null)
+            {
+                if (dso.PlaybackState == PlaybackState.Playing)
+                {
+                    dso.Pause();
+                }
+            }
+            buttonPause.Enabled = false;
+            buttonPlay.Enabled = true;
         }
 
         private void buttonPlay_Click(object sender, EventArgs e)
         {
+            //string to_play = track_List.SelectedIndex.ToString();
+            //MessageBox.Show(to_play);
+            //if (track_List.SelectedIndex >= 0)
+            //{
+            //   // string to_play = track_List.SelectedItem.ToString();
+            //    //audiofile = new AudioFileReader(to_play);
+            //    //outputdevice.Init(audiofile);
+
+
+
+            //    //Uncompressed audio
+            //    //NAudio.Wave.WaveStream uncompressedAudio = NAudio.Wave.WaveFormatConversionStream.CreatePcmStream(new NAudio.Wave.Mp3FileReader(open.FileName));
+            //    //Create block alignment reduction stream
+            //    //stream = new NAudio.Wave.BlockAlignReductionStream(uncompressedAudio);
+            //    //output = new NAudio.Wave.DirectSoundOut();
+            //    //output.Init(stream);
+            //    //output.Play();
+            //}
+
             if (output != null)
             {
                 output.Play();
-                buttonPlay.Enabled = false;
-                buttonPause.Enabled = true;
+                
             }
-
+            if (dso != null)
+            {
+                if (dso.PlaybackState == PlaybackState.Stopped || dso.PlaybackState == PlaybackState.Paused)
+                {
+                    dso.Play();
+                }
+            }
+            buttonPlay.Enabled = false;
+            buttonPause.Enabled = true;
         }
 
         private void buttonNext_Click(object sender, EventArgs e)
@@ -204,8 +255,6 @@ namespace COMPX241_musicPlayer
 
         private void Open()
         {
-            var inPath = @"C:\Users\markh\example.mp3";
-
 
             OpenFileDialog open = new OpenFileDialog();
             open.Filter = "Audio FIle (*.mp3;*.wav)|*.mp3;*.wav;";
@@ -286,7 +335,10 @@ namespace COMPX241_musicPlayer
 
         private void musicPlayer_Load(object sender, EventArgs e)
         {
-   
+            trackBar6.Value = 50;
+            trackBar2.Value = 50;
+            trackBar7.Value = 50;
+            trackBar9.Value = 50;
 
         }
 
@@ -298,32 +350,7 @@ namespace COMPX241_musicPlayer
        //private List<string> selectedWavFiles = new List<string>();
 
         private void checkedListBox1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            /*string filePath = paths[e.Index];
-
-            if (e.CurrentValue == CheckState.Unchecked)
-            {
-                selectedWavFiles.Add(filePath);
-            }
-            else if (e.CurrentValue == CheckState.Checked)
-            {
-                selectedWavFiles.Remove(filePath);
-            }
-            DisposeWave();
-
-            if (selectedWavFiles.Count > 0)
-            {
-                var mixer = new WaveMixerStream32();
-
-                foreach (var file in selectedWavFiles)
-                {
-                    var reader = new WaveFileReader(file);
-                    mixer.AddInputStream(new WaveChannel32(reader));
-                }
-                output = new DirectSoundOut();
-                output.Init(mixer);
-                output.Play();
-            }*/
+        { 
         }
        
 
@@ -331,65 +358,76 @@ namespace COMPX241_musicPlayer
         {
 
         }
-        private void DisplayWaveform(string[] filePaths)
+        private void DisplayWaveform(string filePath, PictureBox pictureBox)
         {
-            if (filePaths == null || filePaths.Length == 0)
+            if (!File.Exists(filePath))
+            {
+                MessageBox.Show("File does not exist.");
                 return;
+            }
 
-            Bitmap waveformBitmap = new Bitmap(pictureBox3.Width, pictureBox3.Height);
+            WaveFileReader reader = new WaveFileReader(filePath);
+
+            // Create a bitmap to draw the waveform
+            Bitmap waveformBitmap = new Bitmap(pictureBox.Width, pictureBox.Height);
             Graphics graphics = Graphics.FromImage(waveformBitmap);
 
-            int numFiles = filePaths.Length;
-            int bytesPerSample = 0;
-            long maxSampleCount = 0;
+            // Get the number of samples and bytes per sample
+            int sampleCount = (int)reader.SampleCount;
+            int bytesPerSample = reader.WaveFormat.BitsPerSample / 4;
 
-            // Find the maximum sample count and bytes per sample among the files
-            for (int i = 0; i < numFiles; i++)
-            {
-                using (WaveFileReader reader = new WaveFileReader(filePaths[i]))
-                {
-                    bytesPerSample = Math.Max(bytesPerSample, reader.WaveFormat.BitsPerSample / 8);
-                    maxSampleCount = Math.Max(maxSampleCount, reader.SampleCount);
-                }
-            }
+            // Calculate the number of samples to skip for each pixel
+            int samplesPerPixel = (int)Math.Max(1, sampleCount / (double)pictureBox.Width);
 
-            int samplesPerPixel = (int)(maxSampleCount / (long)pictureBox3.Width);
             byte[] buffer = new byte[samplesPerPixel * bytesPerSample];
 
-            for (int x = 0; x < pictureBox3.Width; x++)
+            for (int x = 0; x < pictureBox.Width; x++)
             {
-                for (int i = 0; i < numFiles; i++)
+                int startSample = x * samplesPerPixel;
+                int endSample = startSample + samplesPerPixel;
+
+                // Read the samples for the current pixel
+                int bytesRead = reader.Read(buffer, 0, buffer.Length);
+
+                if (bytesRead == 0)
                 {
-                    using (WaveFileReader reader = new WaveFileReader(filePaths[i]))
+                    break;
+                }
+
+                // Calculate the maximum amplitude for the current samples
+                float maxAmplitude = 0;
+
+                for (int i = 0; i < bytesRead; i += bytesPerSample)
+                {
+                    float sample = 0;
+
+                    if (bytesPerSample == 2)
                     {
-                        reader.Position = x * samplesPerPixel * bytesPerSample;
-                        reader.Read(buffer, 0, buffer.Length);
+                        sample = BitConverter.ToInt16(buffer, i) / 32768f;
+                    }
+                    else if (bytesPerSample == 4)
+                    {
+                        sample = BitConverter.ToInt32(buffer, i) / 2147483648f;
+                    }
 
-                        float maxAmplitude = 0;
-
-                        for (int j = 0; j < buffer.Length; j += bytesPerSample)
-                        {
-                            float sample = 0;
-
-                            if (bytesPerSample == 2)
-                                sample = BitConverter.ToInt16(buffer, j) / 32768f;
-                            else if (bytesPerSample == 4)
-                                sample = BitConverter.ToInt32(buffer, j) / 2147483648f;
-
-                            if (Math.Abs(sample) > maxAmplitude)
-                                maxAmplitude = Math.Abs(sample);
-                        }
-
-                        int lineHeight = (int)(maxAmplitude * pictureBox3.Height / 2);
-                        int y = i * (pictureBox3.Height / numFiles) + (pictureBox3.Height / numFiles - lineHeight) / 2;
-                        int height = lineHeight * 2;
-
-                        graphics.DrawLine(Pens.Black, x, y, x, y + height);
+                    if (Math.Abs(sample) > maxAmplitude)
+                    {
+                        maxAmplitude = Math.Abs(sample);
                     }
                 }
+
+                // Calculate the height of the waveform for the current pixel
+                int waveformHeight = (int)(maxAmplitude * pictureBox.Height);
+                int waveformY = (pictureBox.Height - waveformHeight) / 2;
+
+                // Draw the waveform for the current pixel
+                graphics.DrawLine(Pens.Black, x, waveformY, x, waveformY + waveformHeight);
             }
 
-            pictureBox3.Image = waveformBitmap;
+            pictureBox.Image = waveformBitmap;
+
+            reader.Dispose();
+
         }
 
 
@@ -458,45 +496,34 @@ namespace COMPX241_musicPlayer
 
         private void button1_Click(object sender, EventArgs e)
         {
+            buttonPlay.Enabled = true;
             dso.Stop();
+            trackBar6.Value = 50;
+            trackBar2.Value = 50;
+            trackBar7.Value = 50;
+            trackBar9.Value = 50;
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-            //using (var fbd = new FolderBrowserDialog())
-            //{
-            //    fbd.SelectedPath = @"c:\willi";
-            //    DialogResult result = fbd.ShowDialog();
-                
+            buttonPause.Enabled = true;
+            buttonPlay.Enabled = true;
 
-            //    if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
-            //    {
-            //        string[] files = Directory.GetFiles(fbd.SelectedPath);
-
-            //        System.Windows.Forms.MessageBox.Show("Files found: " + files.Length.ToString(), "Message" + files);
-            //    }
-            //}
-
-            //string file = "";
-
-            //OpenFileDialog open = new OpenFileDialog();
-            //open.Filter = "Audio FIle (*.mp3;*.wav)|*.mp3;*.wav;";
-            //open.Multiselect = true;
-            //if (open.ShowDialog() == DialogResult.OK) //return;
-            //{
-            //    file = Path.GetFileName(open.FileName);
-
-            //}
-            //else
-            //{
-            //    MessageBox.Show("Error");
-            //}
+            string filePath1 = "C:\\Users\\willi\\source\\repos\\PlayItAgainSamv\\COMPX241_musicPlayer\\bin\\Debug\\Gorillaz_Feel_Good_Inc\\bass.wav";
+            DisplayWaveform(filePath1, pictureBox1);
+            string filePath2 = "C:\\Users\\willi\\source\\repos\\PlayItAgainSamv\\COMPX241_musicPlayer\\bin\\Debug\\Gorillaz_Feel_Good_Inc\\drums.wav";
+            DisplayWaveform(filePath2, pictureBox2);
+            string filePath3 = "C:\\Users\\willi\\source\\repos\\PlayItAgainSamv\\COMPX241_musicPlayer\\bin\\Debug\\Gorillaz_Feel_Good_Inc\\other.wav";
+            DisplayWaveform(filePath3, pictureBox3);
+            string filePath4 = "C:\\Users\\willi\\source\\repos\\PlayItAgainSamv\\COMPX241_musicPlayer\\bin\\Debug\\Gorillaz_Feel_Good_Inc\\vocals.wav";
+            DisplayWaveform(filePath4, pictureBox4);
 
 
-            stream1 = new WaveFileReader("Europe_TheFinalCountdown\\bass.wav");
-            stream2 = new WaveFileReader("Europe_TheFinalCountdown\\drums.wav");
-            stream3 = new WaveFileReader("Europe_TheFinalCountdown\\other.wav");
-            stream4 = new WaveFileReader("Europe_TheFinalCountdown\\vocals.wav");
+
+            stream1 = new WaveFileReader("Gorillaz_Feel_Good_Inc\\bass.wav");
+            stream2 = new WaveFileReader("Gorillaz_Feel_Good_Inc\\drums.wav");
+            stream3 = new WaveFileReader("Gorillaz_Feel_Good_Inc\\other.wav");
+            stream4 = new WaveFileReader("Gorillaz_Feel_Good_Inc\\vocals.wav");
 
             first32 = new WaveChannel32(stream1);
             second32 = new WaveChannel32(stream2);
@@ -506,23 +533,28 @@ namespace COMPX241_musicPlayer
             mixer = new MixingWaveProvider32();
             if (checkbox4.Checked)
             {
+                first32.Volume = (float)trackBar2.Value / 20;
                 mixer.AddInputStream(first32);
+                
             }
             if (checkBox1.Checked)
             {
+                second32.Volume = (float)trackBar6.Value / 20;
                 mixer.AddInputStream(second32);
             }
             if (checkBox2.Checked)
             {
+                third32.Volume = (float)trackBar7.Value / 20;
                 mixer.AddInputStream(third32);
             }
             if (checkBox3.Checked)
             {
+                fourth32.Volume = (float)trackBar9.Value / 20;
                 mixer.AddInputStream(fourth32);
             }
 
             dso = new DirectSoundOut(DirectSoundOut.DSDEVID_DefaultPlayback);
-
+            
             dso.Init(mixer);
             dso.Play();
         }
@@ -571,6 +603,21 @@ namespace COMPX241_musicPlayer
         private void trackBar2_Scroll(object sender, EventArgs e)
         {
             
+        }
+
+        private void trackBar6_Scroll(object sender, EventArgs e)
+        {
+
+        }
+
+        private void trackBar7_Scroll(object sender, EventArgs e)
+        {
+
+        }
+
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
         }
 
         //private void button4_Click(object sender, EventArgs e)
