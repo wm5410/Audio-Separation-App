@@ -1,0 +1,12 @@
+name: demucs-env
+channels:
+  - defaults
+  - conda-forge
+dependencies:
+  - python=3.10
+  - ffmpeg           # >= installs FFmpeg via conda-forge
+  - pip
+  - pip:
+    - demucs
+    - lameenc
+    - mir_eval

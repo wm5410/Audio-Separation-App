@@ -56,9 +56,9 @@ namespace COMPX241_musicPlayer
         public void listbox()
         {
             track_List.Items.Clear();
-            string[] getfiles = Directory.GetFiles("C:\\Users\\willi\\Music"); //\\separated\\htdemucs\\test");
+            string[] getfiles = Directory.GetFiles("C:\\Users\\William\\Music"); //\\separated\\htdemucs\\test");
             //string[] getfiles = Directory.GetFiles("C:\\Users\\William\\Music"); //\\separated\\htdemucs\\test");
-            string[] dirs = Directory.GetDirectories("C:\\Users\\willi\\Music"); // \\separated\\htdemucs\\test");
+            string[] dirs = Directory.GetDirectories("C:\\Users\\William\\Music"); // \\separated\\htdemucs\\test");
             //string[] dirs = Directory.GetDirectories("C:\\Users\\William\\Music"); // \\separated\\htdemucs\\test");
 
             track_List.DisplayMember = "Name";
@@ -92,6 +92,16 @@ namespace COMPX241_musicPlayer
         {
             InitializeComponent();
 
+            checkbox4.CheckedChanged += (s, e) => button2_Click(s, e);
+            checkBox1.CheckedChanged += (s, e) => button2_Click(s, e);
+            checkBox2.CheckedChanged += (s, e) => button2_Click(s, e);
+            checkBox3.CheckedChanged += (s, e) => button2_Click(s, e);
+
+            trackBar2.Scroll += (s, e) => button2_Click(s, e);
+            trackBar6.Scroll += (s, e) => button2_Click(s, e);
+            trackBar7.Scroll += (s, e) => button2_Click(s, e);
+            trackBar9.Scroll += (s, e) => button2_Click(s, e);
+
             //Add audio deviced to combo box
             NAudio.CoreAudioApi.MMDeviceEnumerator enumerator = new NAudio.CoreAudioApi.MMDeviceEnumerator();
             var devices = enumerator.EnumerateAudioEndPoints(NAudio.CoreAudioApi.DataFlow.All, NAudio.CoreAudioApi.DeviceState.Active);
@@ -102,7 +112,6 @@ namespace COMPX241_musicPlayer
 
 
         }
-        string[] paths, files;
 
         private void track_List_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -437,168 +446,146 @@ namespace COMPX241_musicPlayer
 
         }
 
-        private void sepperateAudioFileToolStripMenuItem_Click(object sender, EventArgs e)
+        private async void sepperateAudioFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            string file = "";
-
-            OpenFileDialog open = new OpenFileDialog();
-            open.Filter = "Audio FIle (*.mp3;*.wav)|*.mp3;*.wav;";
-            open.Multiselect = true;
-            if (open.ShowDialog() == DialogResult.OK) //return;
-            {
-                file = Path.GetFileName(open.FileName);
-
-            }
-            else
-            {
-                MessageBox.Show("Error");
-            }
-        
-
-            //Start process to write to cmd
-            Process process = new Process();
-            //Code to write to cmd prompt
-            process.StartInfo.FileName = "cmd.exe";
-            process.StartInfo.CreateNoWindow = true;
-            process.StartInfo.RedirectStandardOutput = true;
-            process.StartInfo.RedirectStandardInput = true;
-            process.StartInfo.UseShellExecute = false;
-            process.StartInfo.WorkingDirectory = "C:\\Users\\willi\\anaconda3\\Scripts";
-
-            process.Start();
-            if (file != null)
-            {
-                using (var sw = process.StandardInput)
-                {
-                    if (sw.BaseStream.CanWrite)
-                    {
-                        //Activate anaconda 
-                        sw.WriteLine("C:\\Users\\willi\\anaconda3\\Scripts\\activate.bat");
-                        //Activate environment
-                        sw.WriteLine("activate base");
-
-                        sw.WriteLine("cd/");
-                        sw.WriteLine("cd Users");
-                        sw.WriteLine("cd willi");
-                        sw.WriteLine("cd Music");
-                        //Code to execute
-                        sw.WriteLine("demucs " + file);
-                    }
-                }
-            }
-
-            while (!process.StandardOutput.EndOfStream)
-            {
-                var line = process.StandardOutput.ReadLine();
-                Console.WriteLine(line);
-            }
+            using var dlg = new OpenFileDialog { Filter = "Audio (*.mp3;*.wav)|*.mp3;*.wav" };
+            if (dlg.ShowDialog() != DialogResult.OK) return;
+            await RunDemucs(dlg.FileName);
         }
+
+
+
 
         private void button1_Click(object sender, EventArgs e)
         {
             buttonPlay.Enabled = true;
-            dso.Stop();
+            if (dso != null)
+            {
+                dso.Stop();
+                dso.Dispose();
+                dso = null;
+            }
+
+            // reset volumes visually—but do not re-combine automatically
             trackBar6.Value = 50;
             trackBar2.Value = 50;
             trackBar7.Value = 50;
             trackBar9.Value = 50;
         }
 
+
         private void button2_Click(object sender, EventArgs e)
         {
-            buttonPause.Enabled = true;
-            buttonPlay.Enabled = true;
-
-            string filePath1 = "C:\\Users\\willi\\source\\repos\\PlayItAgainSamv\\COMPX241_musicPlayer\\bin\\Debug\\Gorillaz_Feel_Good_Inc\\bass.wav";
-            DisplayWaveform(filePath1, pictureBox1);
-            string filePath2 = "C:\\Users\\willi\\source\\repos\\PlayItAgainSamv\\COMPX241_musicPlayer\\bin\\Debug\\Gorillaz_Feel_Good_Inc\\drums.wav";
-            DisplayWaveform(filePath2, pictureBox2);
-            string filePath3 = "C:\\Users\\willi\\source\\repos\\PlayItAgainSamv\\COMPX241_musicPlayer\\bin\\Debug\\Gorillaz_Feel_Good_Inc\\other.wav";
-            DisplayWaveform(filePath3, pictureBox3);
-            string filePath4 = "C:\\Users\\willi\\source\\repos\\PlayItAgainSamv\\COMPX241_musicPlayer\\bin\\Debug\\Gorillaz_Feel_Good_Inc\\vocals.wav";
-            DisplayWaveform(filePath4, pictureBox4);
-
-
-
-            stream1 = new WaveFileReader("Gorillaz_Feel_Good_Inc\\bass.wav");
-            stream2 = new WaveFileReader("Gorillaz_Feel_Good_Inc\\drums.wav");
-            stream3 = new WaveFileReader("Gorillaz_Feel_Good_Inc\\other.wav");
-            stream4 = new WaveFileReader("Gorillaz_Feel_Good_Inc\\vocals.wav");
-
-            first32 = new WaveChannel32(stream1);
-            second32 = new WaveChannel32(stream2);
-            third32 = new WaveChannel32(stream3);
-            fourth32 = new WaveChannel32(stream4);
-            
-            mixer = new MixingWaveProvider32();
-            if (checkbox4.Checked)
+            // Stop & dispose previous playback
+            if (dso != null)
             {
-                first32.Volume = (float)trackBar2.Value / 20;
-                mixer.AddInputStream(first32);
-                
+                dso.Stop();
+                dso.Dispose();
+                dso = null;
             }
-            if (checkBox1.Checked)
+
+            // Create a fresh mixer
+            mixer = new MixingWaveProvider32();
+
+            // Only add streams if their checkbox is checked—do NOT dispose them here!
+            if (checkbox4.Checked && first32 != null)
             {
-                second32.Volume = (float)trackBar6.Value / 20;
+                first32.Volume = trackBar2.Value / 50f;
+                mixer.AddInputStream(first32);
+            }
+            if (checkBox1.Checked && second32 != null)
+            {
+                second32.Volume = trackBar6.Value / 50f;
                 mixer.AddInputStream(second32);
             }
-            if (checkBox2.Checked)
+            if (checkBox2.Checked && third32 != null)
             {
-                third32.Volume = (float)trackBar7.Value / 20;
+                third32.Volume = trackBar7.Value / 50f;
                 mixer.AddInputStream(third32);
             }
-            if (checkBox3.Checked)
+            if (checkBox3.Checked && fourth32 != null)
             {
-                fourth32.Volume = (float)trackBar9.Value / 20;
+                fourth32.Volume = trackBar9.Value / 50f;
                 mixer.AddInputStream(fourth32);
             }
 
+            // Init & play
             dso = new DirectSoundOut(DirectSoundOut.DSDEVID_DefaultPlayback);
-            
             dso.Init(mixer);
             dso.Play();
+
+            // Update button states
+            buttonPlay.Enabled = false;
+            buttonPause.Enabled = true;
         }
 
-        private void button3_Click(object sender, EventArgs e)
+
+
+        private async void button3_Click(object sender, EventArgs e)
         {
-            string audioPath = track_List.Text;
-            //MessageBox.Show(audioPath);
-            //Start process to write to cmd
-            Process process = new Process();
-            //Code to write to cmd prompt
-            process.StartInfo.FileName = "cmd.exe";
-            process.StartInfo.CreateNoWindow = true;
-            process.StartInfo.RedirectStandardOutput = true;
-            process.StartInfo.RedirectStandardInput = true;
-            process.StartInfo.UseShellExecute = false;
-            process.StartInfo.WorkingDirectory = "C:\\Users\\willi\\anaconda3\\Scripts";
-
-            process.Start();
-
-            using (var sw = process.StandardInput)
+            if (!(track_List.SelectedItem is AudioFile item))
             {
-                if (sw.BaseStream.CanWrite)
-                {
-                    //Activate anaconda 
-                    sw.WriteLine("C:\\Users\\willi\\anaconda3\\Scripts\\activate.bat");
-                    //Activate environment
-                    sw.WriteLine("activate base");
-
-                    sw.WriteLine("cd/");
-                    sw.WriteLine("cd Users");
-                    sw.WriteLine("cd willi");
-                    sw.WriteLine("cd Music");
-                    //Code to execute
-                    sw.WriteLine("demucs " + audioPath);
-                }
+                MessageBox.Show("Please select a track first.");
+                return;
             }
-
-            while (!process.StandardOutput.EndOfStream)
-            {
-                var line = process.StandardOutput.ReadLine();
-                Console.WriteLine(line);
-            }
+            await RunDemucs(item.Path);
         }
+
+        private async Task RunDemucs(string audioPath)
+        {
+            string demucsExe = @"C:\Users\William\anaconda3\envs\demucs-env\Scripts\demucs.exe";
+            if (!File.Exists(demucsExe))
+            {
+                MessageBox.Show($"Cannot find demucs.exe at:\n{demucsExe}");
+                return;
+            }
+
+            // disable UI to prevent re-clicks
+            sepperateAudioFileToolStripMenuItem.Enabled = false;
+            button3.Enabled = false;
+            label1.Text = "Starting separation…";
+            txtLog.Clear();
+
+            await Task.Run(() =>
+            {
+                var psi = new ProcessStartInfo
+                {
+                    FileName = demucsExe,
+                    Arguments = $"\"{audioPath}\"",
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    UseShellExecute = false,
+                    CreateNoWindow = true
+                };
+                using var proc = new Process { StartInfo = psi, EnableRaisingEvents = true };
+
+                proc.OutputDataReceived += (_, e) => {
+                    if (e.Data != null)
+                        Invoke((Action)(() => {
+                            txtLog.AppendText(e.Data + "\r\n");
+                            label1.Text = e.Data;
+                        }));
+                };
+                proc.ErrorDataReceived += (_, e) => {
+                    if (e.Data != null)
+                        Invoke((Action)(() => {
+                            txtLog.AppendText("[ERR] " + e.Data + "\r\n");
+                        }));
+                };
+
+                proc.Start();
+                proc.BeginOutputReadLine();
+                proc.BeginErrorReadLine();
+                proc.WaitForExit();
+            });
+
+            label1.Text = "Separation complete!";
+            LoadSeparatedStems(audioPath);
+            sepperateAudioFileToolStripMenuItem.Enabled = true;
+            button3.Enabled = true;
+        }
+
+
 
         private void trackBar2_Scroll(object sender, EventArgs e)
         {
@@ -620,28 +607,76 @@ namespace COMPX241_musicPlayer
             Application.Exit();
         }
 
-        //private void button4_Click(object sender, EventArgs e)
-        //{
-        //    var inPath = @"C:\Users\willi\Music\MJ.mp3";
-        //    var semitone = Math.Pow(2, 1.0 / 12);
-        //    var upOneTone = semitone * semitone;
-        //    var downOneTone = 1.0 / upOneTone;
-        //    using (var reader = new MediaFoundationReader(inPath))
-        //    {
-        //        var pitch = new SmbPitchShiftingSampleProvider(reader.ToSampleProvider());
-        //        using (var device = new WaveOutEvent())
-        //        {
-        //            pitch.PitchFactor = (float)upOneTone; // or downOneTone
-        //                                                  // just playing the first 10 seconds of the file
-        //            device.Init(pitch.Take(TimeSpan.FromSeconds(10)));
-        //            device.Play();
-        //            while (device.PlaybackState == PlaybackState.Playing)
-        //            {
-        //                Thread.Sleep(500);
-        //            }
-        //        }
-        //    }
-        //}
+        private void openFileDialog2_FileOk(object sender, CancelEventArgs e)
+        {
+
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        /// <summary>
+        /// After separation, look in the Demucs output folder (relative to your EXE),
+        /// find the bass/drums/other/vocals WAVs, display their waveforms, and
+        /// prepare them for mixing/playback.
+        /// </summary>
+        private void LoadSeparatedStems(string originalPath)
+        {
+            // 1) Build Demucs output folder path
+            string exeDir = Path.GetDirectoryName(Application.ExecutablePath);
+            string songName = Path.GetFileNameWithoutExtension(originalPath);
+            string outDir = Path.Combine(exeDir, "separated", "htdemucs", songName);
+
+            if (!Directory.Exists(outDir))
+            {
+                MessageBox.Show($"Couldn’t find separated stems:\n{outDir}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            // 2) Paths for each stem
+            string bassPath = Path.Combine(outDir, "bass.wav");
+            string drumsPath = Path.Combine(outDir, "drums.wav");
+            string otherPath = Path.Combine(outDir, "other.wav");
+            string vocalsPath = Path.Combine(outDir, "vocals.wav");
+
+            // 3) Display waveforms
+            if (File.Exists(bassPath)) DisplayWaveform(bassPath, pictureBox1);
+            if (File.Exists(drumsPath)) DisplayWaveform(drumsPath, pictureBox2);
+            if (File.Exists(otherPath)) DisplayWaveform(otherPath, pictureBox3);
+            if (File.Exists(vocalsPath)) DisplayWaveform(vocalsPath, pictureBox4);
+
+            // 4) Prepare streams & channels (discard any previous ones)
+            DisposeWave();
+            mixer = new MixingWaveProvider32();
+
+            if (File.Exists(bassPath))
+            {
+                stream1 = new WaveFileReader(bassPath);
+                first32 = new WaveChannel32(stream1);
+            }
+            if (File.Exists(drumsPath))
+            {
+                stream2 = new WaveFileReader(drumsPath);
+                second32 = new WaveChannel32(stream2);
+            }
+            if (File.Exists(otherPath))
+            {
+                stream3 = new WaveFileReader(otherPath);
+                third32 = new WaveChannel32(stream3);
+            }
+            if (File.Exists(vocalsPath))
+            {
+                stream4 = new WaveFileReader(vocalsPath);
+                fourth32 = new WaveChannel32(stream4);
+            }
+
+            // 5) Enable your Combine button
+            button2.Enabled = true;
+        }
+
+
 
         private void buttonOpen_Click(object sender, EventArgs e)
         {
